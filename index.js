@@ -40,6 +40,18 @@ async function run() {
             const result = await productsCollection.updateMany(query, {$set: {isSoldOut: true}}, {multi: true},{upsert: true})
             res.send(result);
          })
+         app.post('/login' , async(req, res)=>{
+            const userData = req.body.body.username;
+            const result = await userCollection.findOne({username: userData});
+            if(result.pass.toString() === req.body.body.pass.toString()){
+                res.send({user: 'admin', isSuperAdmin: true})
+            } else {
+                res.status(406).send('wrong')
+
+            }
+            
+            
+         })
 
 
     }
