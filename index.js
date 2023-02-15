@@ -41,16 +41,22 @@ async function run() {
             res.send(result);
          })
          app.post('/login' , async(req, res)=>{
-            const userData = req.body.body.username;
-            const result = await userCollection.findOne({username: userData});
-            if(result.pass.toString() === req.body.body.pass.toString()){
-                res.send({user: 'admin', isSuperAdmin: true})
-            } else {
-                res.status(406).send('wrong')
+             const userName = req.body.username;
+            const userPass = req.body.pass;
+            const result = await userCollection.findOne({username: userName});
+            if(result.pass.toString() === userPass.toString())
+            {
 
+                res.send({user:'admin', isSuperAdmin: true})
+            }
+            else {
+                res.send('Not authorized')
             }
             
             
+         })
+         app.post('/test', (req, res)=>{
+            res.send('ok');
          })
 
 
