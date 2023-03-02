@@ -19,6 +19,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 // db colleciton list
 const productsCollection = client.db("zays-inv").collection("zays-inv-products");
 const userCollection = client.db("zays-inv").collection("users");
+const orderCollection = client.db("zays-inv").collection("orders");
 
 
 
@@ -33,13 +34,21 @@ async function run() {
             
          })
 
-
+// Sold out multiproducts
          app.post('/updatemany', async (req,res)=>{
             const productIds = req.body.body;
              const query = { Id : {$in: productIds}  }
-            const result = await productsCollection.updateMany(qu ery, {$set: {isSoldOut: true}}, {multi: true},{upsert: true})
+            const result = await productsCollection.updateMany(query, {$set: {isSoldOut: true}}, {multi: true},{upsert: true})
             res.send(result);
          })
+        //  Create Order 
+
+        app.post('/createorder', async (req, res)=>{
+            const orderInfo = req.body;
+            const result = await orderCollection.updateOne(orderInfo.body, {$set: {}}, {upsert: true})
+            res.send(result);
+        })
+// User Login
          app.post('/login' , async(req, res)=>{
              const userName = req.body.username;
             const userPass = req.body.pass;
