@@ -37,7 +37,7 @@ async function run() {
          app.post('/updatemany', async (req,res)=>{
             const productIds = req.body.body;
              const query = { Id : {$in: productIds}  }
-            const result = await productsCollection.updateMany(query, {$set: {isSoldOut: true}}, {multi: true},{upsert: true})
+            const result = await productsCollection.updateMany(qu ery, {$set: {isSoldOut: true}}, {multi: true},{upsert: true})
             res.send(result);
          })
          app.post('/login' , async(req, res)=>{
@@ -46,8 +46,21 @@ async function run() {
             const result = await userCollection.findOne({username: userName});
             if(result.pass.toString() === userPass.toString())
             {
+                function makeid(length) {
+                    let result = '';
+                    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    const charactersLength = characters.length;
+                    let counter = 0;
+                    while (counter < length) {
+                      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                      counter += 1;
+                    }
+                    return result;
+                }
+                
+                const userToken = (makeid(5));
 
-                res.send({user:'admin', isSuperAdmin: true})
+                res.send({user:'admin', isSuperAdmin: true, userToken})
             }
             else {
                 res.send('Not authorized')
